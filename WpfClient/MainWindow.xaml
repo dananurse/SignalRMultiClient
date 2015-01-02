@@ -1,0 +1,23 @@
+﻿<Window x:Class="WpfClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525"
+        Closing="ClientClosing">
+    <Grid>
+        <StackPanel x:Name="SignInPanel" Margin="10">
+            <Label Content="Handle:" />
+            <UniformGrid Rows="1">
+                <TextBox x:Name="tbUser" Height="20" Margin="10"/>
+                <Button x:Name="SignInButton" Content="Sign In" Margin="5" Click="SignInClick"/>
+            </UniformGrid>
+            <Label x:Name="StatLabel" Visibility="Collapsed" />
+        </StackPanel>
+        <StackPanel x:Name="ChatPanel" Margin="10" Visibility="Collapsed">
+            <Grid>
+                <TextBox x:Name="TbMessage" Height="20" TextWrapping="Wrap" Margin="0,0,80,0" />
+                <Button x:Name="BtnSend" Content="Send" Width="75" Height="20" Click="SendClick" IsDefault="True" IsEnabled="False" HorizontalAlignment="Right"/>
+            </Grid>
+            <RichTextBox x:Name="RtConsole" HorizontalAlignment="Left" Height="461" ScrollViewer.VerticalScrollBarVisibility="Auto" Margin="0,10" IsReadOnly="True" />
+        </StackPanel>
+    </Grid>
+</Window>

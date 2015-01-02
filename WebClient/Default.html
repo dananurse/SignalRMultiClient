@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SignalR Chat</title>
+    <style type="text/css">
+        .container {
+            background-color: #99ccff;
+            border: thick solid #808080;
+            padding: 20px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="message"/>
+        <input type="button" id="sendmessage" value="Send"/>
+        <input type="hidden" id="displayname"/>
+        <ul id="discussion"></ul>
+    </div>
+    <!--Script refs-->
+    <!--jQuery - required for the signalR scripts-->
+    <script src="Scripts/jquery-1.6.4.min.js"></script>
+    <!--SignalR Lib-->
+    <script src="Scripts/jquery.signalR-2.1.2.min.js"></script>
+    <!--ref to the autogen signlR hub script-->
+    <script src="http://localhost:8080/signalr/hubs"></script>
+    <script type="text/javascript">
+        $(function() {
+            //hub url
+            $.connection.hub.url = "http://localhost:8080/signalr";
+
+            // prxy ref to the hub
+            var chat = $.connection.serviceHub;
+
+            // function that hub calls to broadcst messages
+            chat.client.addMessage = function(name, message) {
+                // html encode strings
+                var encName = $('<div />').text(name).html();
+                var encMsg = $('<div />').text(message).html();
+                // add message to page
+                $('#discussion').append('<li><strong>' + encName
+                    + '</strong>:&nbsp;&nbsp;' + encMsg + '</li>');
+            };
+            // store user nme to prefix messages
+            $('#displayname').val(prompt(('Enter your Handle:', '')));
+            // set focus to input textbox
+            $('#message').focus();
+            // start the connection
+            $.connection.hub.start().done(function() {
+                $('#sendmessage').click(function() {
+                    // call send on hub
+                    chat.server.send($('#displayname').val(), $('#message').val());
+                    // clear the textbox and reset focus
+                    $('#message').val('').focus();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
