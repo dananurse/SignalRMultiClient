@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Cors;
@@ -15,21 +11,17 @@ namespace SignalRService
     {
         static void Main(string[] args)
         {
-            string url = "http://localhost:8080";
+            //URL to host the SignalR service from
+            // TODO: Push URL to configuration
+            const string url = "http://localhost:8080";
 
+            //Start the WebApp and display to console
+            //TODO: Convert this to run as a windows service
             using (WebApp.Start(url))
             {
                 Console.WriteLine("Server running on {0}", url);
-//                Timer t = new Timer(TimerTick, null, 0, 1000);
                 Console.ReadLine();
             }
-        }
-
-        private static void TimerTick(object state)
-        {
-            string message = DateTime.Now.ToLongTimeString();
-            Console.WriteLine(message);
-            ServiceHub.SendServerMessage("Server", message);
         }
     }
 
@@ -44,17 +36,29 @@ namespace SignalRService
 
     public class ServiceHub : Hub
     {
+        // Method called by clients to broadcast messages
         public void Send(string name, string message)
         {
             Clients.All.addMessage(name, message);
         }
 
+        //NOTE: can probably be used to alert when things happen, like chnges in a db?
+        /// <summary>
+        /// Allows the hosting process to broadcast
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="message"></param>
         internal static void SendServerMessage(string name, string message)
         {
             IHubContext con = GlobalHost.ConnectionManager.GetHubContext<ServiceHub>();
+            //addMessage - calling a method on clients
             con.Clients.All.addMessage(name, message);
         }
 
+        /// <summary>
+        /// broadcast a message when a client connects
+        /// </summary>
+        /// <returns></returns>
         public override Task OnConnected()
         {
             string handle = Context.ConnectionId;
@@ -62,6 +66,10 @@ namespace SignalRService
             return base.OnConnected();
         }
 
+        /// <summary>
+        /// broadcast a message when a client disconnects
+        /// </summary>
+        /// <returns></returns>
         public override Task OnDisconnected(bool stopCalled)
         {
             string handle = Context.ConnectionId;

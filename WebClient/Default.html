@@ -30,10 +30,10 @@
             //hub url
             $.connection.hub.url = "http://localhost:8080/signalr";
 
-            // prxy ref to the hub
+            // proxy reference to the hub
             var chat = $.connection.serviceHub;
 
-            // function that hub calls to broadcst messages
+            // function that the hub calls when broadcasting messages
             chat.client.addMessage = function(name, message) {
                 // html encode strings
                 var encName = $('<div />').text(name).html();

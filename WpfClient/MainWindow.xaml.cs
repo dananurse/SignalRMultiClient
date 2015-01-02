@@ -1,18 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.AspNet.SignalR.Client;
 
 namespace WpfClient
@@ -24,6 +12,7 @@ namespace WpfClient
     {
         public string Handle { get; set; }
         public IHubProxy HubProxy { get; set; }
+        //TODO: Move URI to configuration
         private const string URI = "http://localhost:8080/signalr";
         public HubConnection Connection { get; set; }
 
@@ -39,6 +28,7 @@ namespace WpfClient
             TbMessage.Focus();
         }
 
+        //Connection has closed, show the Sign in panel
         private void ConnectionClosed()
         {
             var dp = Application.Current.Dispatcher;
@@ -48,6 +38,7 @@ namespace WpfClient
             dp.Invoke(() => SignInPanel.Visibility = Visibility.Visible);
         }
 
+        // Connect to the hub
         private async void ConnectAsync()
         {
             Connection = new HubConnection(URI);
@@ -75,6 +66,7 @@ namespace WpfClient
             RtConsole.AppendText("Conected to " + URI + "\r");
         }
 
+        // sign in to the hub
         private void SignInClick(object sender, RoutedEventArgs e)
         {
             Handle = tbUser.Text;
@@ -87,6 +79,7 @@ namespace WpfClient
             }
         }
 
+        //client closing, clen up the hub connection
         private void ClientClosing(object sender, CancelEventArgs e)
         {
             if (Connection != null)
@@ -95,5 +88,7 @@ namespace WpfClient
                 Connection.Dispose();
             }
         }
+
+        //TODO: implementation of a sign-out function?
     }
 }
